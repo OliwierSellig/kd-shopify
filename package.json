@@ -1,0 +1,25 @@
+{
+  "name": "astro-sanity-turbopack-starter",
+  "private": true,
+  "author": {
+    "name": "Oliwier Sellig",
+    "email": "oliwier@kryptonum.eu",
+    "url": "https://kryptonum.eu"
+  },
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "turbo": "^2.1.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "bun@1.1.26",
+  "workspaces": [
+    "apps/*"
+  ]
+}
