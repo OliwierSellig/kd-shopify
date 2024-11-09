@@ -1,0 +1,50 @@
+---
+import type { Product } from '@/src/global/types';
+
+
+type Props = {
+	items: Product[];
+  href?: string;
+}
+
+const { items, href } = Astro.props;
+---
+
+<ul class="list">
+  {items.map((item) => (
+   <a href={`${href ? href + '/' : ''}${item.handle}`}>
+    <img src={item.images.edges[0].node.url} sizes="100vw" />
+    <div>
+      <h2>{item.title}</h2>
+      <p>{item.description}</p>
+    </div>
+   </a>
+  ))}
+</ul>
+
+<style lang="scss">
+  .list{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+
+    a{
+      border: 2px solid #ddd;
+      padding: 20px;
+      border-radius: 10px;
+
+      img{
+        border-radius: 12px;
+        margin-bottom: 12px;
+      }
+      h2{
+        font-size: 1.8rem;
+        margin-bottom: 12px;
+      }
+
+      p{
+        font-size: 1rem;
+      }
+    }
+  }
+</style>

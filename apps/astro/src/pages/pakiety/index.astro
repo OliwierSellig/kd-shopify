@@ -1,0 +1,18 @@
+---
+import List from "@/src/components/global/List.astro";
+import Layout from "@/src/layouts/Layout.astro";
+import { getProductsByTag } from "@/src/utils/get-tag";
+import metadataFetch from "@/src/utils/metadata.fetch";
+const metadata = await metadataFetch('Index_Page')
+
+const bundles = await getProductsByTag('pakiet_produktow');
+
+
+
+const bundlesList = bundles.edges.map((edge) => edge.node);
+
+---
+
+<Layout {...metadata} >
+	<section><List href="/pakiety" items={bundlesList} /></section>
+</Layout>

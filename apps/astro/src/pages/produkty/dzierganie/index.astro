@@ -1,0 +1,35 @@
+---
+import List from '@/src/components/global/List.astro';
+import Layout from '@/src/layouts/Layout.astro';
+import { getCollectionById } from '@/src/utils/get-collection';
+import metadataFetch from '@/src/utils/metadata.fetch';
+
+
+const metadata = await metadataFetch('Index_Page')
+
+const collection = await getCollectionById('gid://shopify/Collection/642831286621');
+const collectionProducts = collection.products.edges.map((edge) => edge.node);
+
+
+
+---
+<Layout {...metadata}>
+<section class="section">
+  <h1>{collection.title}</h1>
+  <List items={collectionProducts} />
+</section>
+</Layout>
+
+
+<style lang="scss">
+  .section{
+    padding: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+
+	h1{
+		margin-bottom: 32px;
+	}
+  }
+</style>

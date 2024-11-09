@@ -2,6 +2,8 @@
 
 interface ImportMetaEnv {
   readonly SANITY_API_TOKEN: string
+  readonly SHOPIFY_STOREFRONT_TOKEN: string
+  readonly SHOPIFY_STORE_URL: string
 }
 
 interface ImportMeta {

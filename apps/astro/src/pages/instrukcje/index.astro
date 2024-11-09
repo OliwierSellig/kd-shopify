@@ -1,0 +1,18 @@
+---
+import List from "@/src/components/global/List.astro";
+import Layout from "@/src/layouts/Layout.astro";
+import { getProductsByTag } from "@/src/utils/get-tag";
+import metadataFetch from "@/src/utils/metadata.fetch";
+
+const metadata = await metadataFetch('Index_Page')
+
+const products = await getProductsByTag('instrukcja');
+
+const productsList = products.edges.map((edge) => edge.node);
+
+
+---
+
+<Layout {...metadata}>
+	<section><List href="/instrukcje" items={productsList} /></section>
+</Layout>

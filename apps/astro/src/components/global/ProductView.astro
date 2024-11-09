@@ -1,0 +1,130 @@
+---
+import type { Product } from "@/src/global/types";
+import { AddToCartButton } from "../ui/addToCartButton";
+
+type Props = {
+	product: Product;
+	currentVariant: {
+    id: string;
+    title: string;
+    price: {
+        amount: string;
+        currencyCode: string;
+    };
+    availableForSale: boolean;
+    selectedOptions: {
+        name: string;
+        value: string;
+    }[];
+    image: {
+        url: string;
+        altText: string;
+        width: number;
+        height: number;
+    };
+    sku: string;
+    quantityAvailable: number;
+};
+	productVariants: {
+    id: string;
+    title: string;
+    price: {
+        amount: string;
+        currencyCode: string;
+    };
+    availableForSale: boolean;
+    selectedOptions: {
+        name: string;
+        value: string;
+    }[];
+    image: {
+        url: string;
+        altText: string;
+        width: number;
+        height: number;
+    };
+    sku: string;
+    quantityAvailable: number;
+}[];
+}
+
+const { product, currentVariant, productVariants } = Astro.props;
+---
+
+
+<section class="section max-width">
+	<img src={currentVariant.image.url} alt={product.title} />
+	{productVariants.length > 1 && <div class='variants'>
+		<span>Warianty</span>
+		<div class='variants-list'>
+			{product.variants.edges.map((variant) => <a href={`/produkty/${product.handle}?variant=${variant.node.id.split('/').pop()}`}>{variant.node.title}</a>)}
+		</div>
+	</div>}
+	<h1>{product.title}</h1>
+	<span class='price'>{currentVariant.price.amount}{' '}{currentVariant.price.currencyCode}</span>
+	<p>{product.description}</p>
+	<AddToCartButton 
+	client:load
+	product={{
+	  id: currentVariant.id,
+	  title: product.title,
+	  price: parseFloat(currentVariant.price.amount),
+	  image: currentVariant.image.url,
+	}}
+  />
+</section>
+
+
+<style lang="scss">
+	.section{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-top: 64px;
+
+		img{
+			max-width: 420px;
+			border-radius: 12px;
+			margin-bottom: 36px;
+		}
+
+		h1{
+			margin-bottom: 24px;
+			text-align: center;
+		}
+
+		.price{
+			font-size: 1.2rem;
+			margin-bottom: 24px;
+			border: 2px solid #e0e0e0;
+			padding: 10px 16px;
+			border-radius: 12px;
+		}
+
+		.variants{
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			align-items: center;
+			margin-bottom: 24px;
+
+			div{
+				display: flex;
+				align-items: center;
+				gap: 12px;
+
+				a{
+					background-color: #f0f0f0;
+					padding: 12px 24px;
+					border-radius: 12px;
+					transition: background-color 0.3s ease;
+
+					&:hover{
+						background-color: #e0e0e0;
+
+					}
+				}
+			}
+		}
+	}
+</style>

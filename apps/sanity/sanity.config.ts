@@ -6,12 +6,9 @@ import { structure } from './structure'
 import { schemaTypes, singletonActions, singletonTypes } from './structure/schema-types'
 import { showProductionUrl } from './utils/show-production-url'
 
-const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID!
-
 export default defineConfig({
   name: 'default',
-  title: 'kryptonum-eu',
-
+  title: 'kd-shopify',
   projectId: 'xx93h9mw',
   dataset: 'production',
 

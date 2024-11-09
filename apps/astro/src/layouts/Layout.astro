@@ -1,8 +1,8 @@
 ---
-import '@/global/global.scss'
-import { LOCALE } from '../global/constants'
-import Head, { type Props as HeadProps } from './Head.astro'
-
+import '@/global/global.scss';
+import { Cart } from '../components/global/cart';
+import { LOCALE } from '../global/constants';
+import Head, { type Props as HeadProps } from './Head.astro';
 type Props = HeadProps
 
 const { ...props } = Astro.props
@@ -14,8 +14,20 @@ const { ...props } = Astro.props
     <Head {...props} />
   </head>
   <body>
+      <Cart client:load />
+    <header class="header max-width"><a href="/">Strona główna</a></header>
     <main id="main">
-      <slot />
-    </main>
+        <slot />
+      </main> 
   </body>
 </html>
+
+<style lang="scss">
+  .header{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    height: 100px;
+  }
+</style>

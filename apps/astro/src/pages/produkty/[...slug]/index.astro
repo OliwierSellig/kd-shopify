@@ -1,0 +1,47 @@
+---
+import ProductView from "@/src/components/global/ProductView.astro";
+import Layout from "@/src/layouts/Layout.astro";
+import { getProductBySlug } from "@/src/utils/get-product";
+import metadataFetch from "@/src/utils/metadata.fetch";
+
+const metadata = await metadataFetch('Index_Page')
+
+const { slug } = Astro.params;
+
+const variant = Astro.url.searchParams.get('variant');
+
+if (!slug) {
+  return notFound();
+}
+
+const product = await getProductBySlug(slug);
+
+
+
+if (!product) {
+  return notFound();
+}
+
+
+
+const productVariants = product.variants.edges.map((edge) => edge.node);
+
+
+
+
+
+const currentVariant = productVariants.length === 1 ? productVariants[0] : productVariants.find((v) => `gid://shopify/ProductVariant/${variant}` === v.id)  ?? productVariants[0];
+
+
+---
+
+<Layout {...metadata}>
+	<ProductView product={product} currentVariant={currentVariant} productVariants={productVariants} />
+</Layout>
+
+
+
+
+
+
+

@@ -1,16 +1,15 @@
-import { defineField, defineType } from "sanity"
-import { defineSlugForDocument } from "../../utils/define-slug-for-document";
+import { defineField, defineType } from 'sanity'
+import { defineSlugForDocument } from '../../utils/define-slug-for-document'
 
-const name = 'Index_Page';
-const title = 'Homepage';
-const slug = '/';
+const name = 'Index_Page'
+const title = 'Homepage'
+const slug = '/'
 
 export default defineType({
   name: name,
   type: 'document',
   title: title,
   icon: () => '🏠',
-  options: { documentPreview: true },
   fields: [
     ...defineSlugForDocument({ slug: slug }),
     defineField({
@@ -34,7 +33,7 @@ export default defineType({
   preview: {
     prepare: () => ({
       title: title,
-      subtitle: slug
-    })
-  }
-});
+      subtitle: slug,
+    }),
+  },
+})
