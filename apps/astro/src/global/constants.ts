@@ -4,7 +4,7 @@
  * @constant
  * @type {string}
  */
-export const THEME_COLOR: string = '#011310'
+export const THEME_COLOR: string = '#011310';
 
 /**
  * Global declaration of background color in HEX format.
@@ -12,7 +12,7 @@ export const THEME_COLOR: string = '#011310'
  * @constant
  * @type {string}
  */
-export const BACKGROUND_COLOR: string = '#000103'
+export const BACKGROUND_COLOR: string = '#000102';
 
 /**
  * Global declaration of the locale (language) for the application.
@@ -20,7 +20,7 @@ export const BACKGROUND_COLOR: string = '#000103'
  * @constant
  * @type {string}
  */
-export const LOCALE: string = 'pl'
+export const LOCALE: string = 'pl';
 
 /**
  * Global declaration of the domain for the application.
@@ -28,7 +28,7 @@ export const LOCALE: string = 'pl'
  * @constant
  * @type {string}
  */
-export const DOMAIN: string = 'https://kryptonum.eu'
+export const DOMAIN: string = 'https://kryptonum.eu';
 
 /**
  * Global declaration of the default title for the application.
@@ -36,7 +36,7 @@ export const DOMAIN: string = 'https://kryptonum.eu'
  * @constant
  * @type {string}
  */
-export const DEFAULT_TITLE: string = 'KD Sanity'
+export const DEFAULT_TITLE: string = 'KD Sanity';
 
 /**
  * Global declaration of the default description for the application.
@@ -45,8 +45,7 @@ export const DEFAULT_TITLE: string = 'KD Sanity'
  * @constant
  * @type {string}
  */
-export const DEFAULT_DESCRIPTION: string =
-  'Kryptonum tworzy nieszablonowe projekty tym, którym zależy na: 👨🏻‍💻 profesjonalnej stronie, 🎨 unikatowym brandingu, 💰 dochodowym biznesie online.'
+export const DEFAULT_DESCRIPTION: string = 'Kryptonum tworzy nieszablonowe projekty tym, którym zależy na: 👨🏻‍💻 profesjonalnej stronie, 🎨 unikatowym brandingu, 💰 dochodowym biznesie online.';
 
 /**
  * Object containing regular expressions for validation purposes.
@@ -60,11 +59,11 @@ export const REGEX: { email: RegExp; phone: RegExp; string: RegExp } = {
   email: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
   phone: /^(?:\+(?:\d{1,3}))?(?:[ -]?\(?\d{1,4}\)?[ -]?\d{1,5}[ -]?\d{1,5}[ -]?\d{1,6})$/,
   string: /^(?!\s+$)(.*?)\s*$/,
-}
+};
 
 /**
  * Global declaration of the easing function for JS animations.
  * @constant
  * @type {number[]}
  */
-export const EASING: number[] = [0.6, -0.15, 0.27, 1.15]
+export const EASING: number[] = [0.6, -0.15, 0.27, 1.15];
