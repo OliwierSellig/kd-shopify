@@ -6,6 +6,7 @@
     "email": "oliwier@kryptonum.eu",
     "url": "https://kryptonum.eu"
   },
+  "packageManager": "npm@10.2.4",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
