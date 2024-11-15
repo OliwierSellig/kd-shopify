@@ -131,7 +131,7 @@ if (authStatus.token) {
         <p>{authStatus.error}</p>
         <a href="/konto" class="try-again-button">Try Again</a>
       </div>
-    ) : authStatus.success ? (
+    ) : !!authStatus.token ? (
       <div class="success">
         <h2>Authentication Successful!</h2>
         <div class="token-display">
@@ -148,7 +148,6 @@ if (authStatus.token) {
     ) : (
       <div class="welcome">
         <h2>Welcome to Your Account</h2>
-        <p>Please log in to continue.</p>
       </div>
     )}
   </div>
