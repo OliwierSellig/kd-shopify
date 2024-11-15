@@ -35,12 +35,22 @@
 //   },
 // });
 
-import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel/serverless';
+import { defineConfig } from 'astro/config';
+import { isPreviewDeployment } from './src/utils/is-preview-deployment';
 
 export default defineConfig({
-  integrations: [react()],
-  output: 'server', // or 'hybrid' depending on your needs
+  integrations: [react(), sitemap()],
+  image: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+      },
+    ],
+  },
+  output: 'server',
   adapter: vercel(),
 });
