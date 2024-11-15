@@ -54,6 +54,6 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
   },
-  output: 'server',
+  output: 'hybrid',
   adapter: vercel(),
 });
