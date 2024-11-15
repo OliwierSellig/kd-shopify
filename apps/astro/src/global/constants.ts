@@ -28,7 +28,7 @@ export const LOCALE: string = 'pl';
  * @constant
  * @type {string}
  */
-export const DOMAIN: string = 'https://kryptonum.eu';
+export const DOMAIN: string = 'https://kdshopify.com';
 
 /**
  * Global declaration of the default title for the application.
@@ -36,7 +36,7 @@ export const DOMAIN: string = 'https://kryptonum.eu';
  * @constant
  * @type {string}
  */
-export const DEFAULT_TITLE: string = 'KD Sanity';
+export const DEFAULT_TITLE: string = 'KD Shopify';
 
 /**
  * Global declaration of the default description for the application.

@@ -1,4 +1,4 @@
-export async function POST({ request }) {
+export async function POST(request: Request) {
   const { token } = await request.json();
 
   console.log('Attempting logout with token:', token);
@@ -45,7 +45,7 @@ export async function POST({ request }) {
     console.error('Logout failed:', error);
     return new Response(
       JSON.stringify({
-        error: 'Logout failed: ' + error.message,
+        error: 'Logout failed: ' + (error as Error).message,
       }),
       {
         status: 500,

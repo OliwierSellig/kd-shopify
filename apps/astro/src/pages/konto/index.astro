@@ -83,10 +83,10 @@ const getUserEmail = async (token: string) => {
 
 let authStatus = {
   isLoading: false,
-  error: null,
-  token: storedToken, // Initialize with stored token
+  error: null as string | null,
+  token: storedToken,
   id_token: null,
-  success: !!storedToken // Set success based on stored token
+  success: !!storedToken
 }
 
 // Only attempt token exchange if we have a code and don't have a stored token
@@ -106,7 +106,7 @@ if (code) {
       window.history.replaceState({}, '', newUrl)
     }
   } catch (error) {
-    authStatus.error = error.message
+    authStatus.error = error instanceof Error ? error.message : String(error)
   } finally {
     authStatus.isLoading = false
   }
@@ -165,7 +165,6 @@ if (authStatus.token) {
           },
           body: JSON.stringify({ token })
         });
-        const responseData = await response.json()
         if (response.ok) {
           window.location.href = '/';
         } else {
