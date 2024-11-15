@@ -80,18 +80,3 @@ export const productQuery = `#graphql
  
 }
 `;
-
-const CUSTOMER_FIELDS = `#graphql
-  id
-  firstName
-  lastName
-  email
-  phone
-  createdAt
-  defaultAddress {
-    address1
-    city
-    country
-    zip
-  }
-`;

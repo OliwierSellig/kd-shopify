@@ -6,7 +6,6 @@ import styles from './styles.module.scss';
 export function Cart() {
   const [isOpen, setIsOpen] = useState(false);
   const cart = useStore(cartStore);
-  const loading = useStore(isCartLoading);
   const cartRef = useRef<HTMLDivElement>(null);
 
   // Initialize cart on mount
@@ -89,30 +88,15 @@ export function Cart() {
                       <h3>{item.merchandise.title}</h3>
                       <p className={styles.price}>{parseFloat(item.merchandise.price.amount).toFixed(2)} PLN</p>
                       <div className={styles.quantityControls}>
-                        <button
-                          onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
-                          disabled={item.quantity <= 1}
-                        >
+                        <button onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1}>
                           −
                         </button>
                         <span>{item.quantity}</span>
-                        <button
-                          onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
-                          disabled={item.quantity >= item.merchandise.quantityAvailable}
-                          title={
-                            item.quantity >= item.merchandise.quantityAvailable
-                              ? `Maksymalna dostępna ilość: ${item.merchandise.quantityAvailable}`
-                              : 'Dodaj więcej'
-                          }
-                        >
+                        <button onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)} disabled={item.quantity >= item.merchandise.quantityAvailable} title={item.quantity >= item.merchandise.quantityAvailable ? `Maksymalna dostępna ilość: ${item.merchandise.quantityAvailable}` : 'Dodaj więcej'}>
                           +
                         </button>
                       </div>
-                      {item.merchandise.quantityAvailable <= 5 && (
-                        <p className={styles.stockWarning}>
-                          Pozostało tylko {item.merchandise.quantityAvailable} sztuk
-                        </p>
-                      )}
+                      {item.merchandise.quantityAvailable <= 5 && <p className={styles.stockWarning}>Pozostało tylko {item.merchandise.quantityAvailable} sztuk</p>}
                       <button onClick={() => handleRemoveItem(item.id)} className={styles.removeButton}>
                         Usuń
                       </button>

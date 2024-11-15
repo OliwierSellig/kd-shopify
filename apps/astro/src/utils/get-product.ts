@@ -9,8 +9,13 @@ export async function getProductBySlug(slug: string) {
 	}
   `;
 
+  const requestHeaders = {
+    'Cache-Control': 'no-store',
+  };
+
   const { product } = (await shopifyClient.request(query, {
     handle: slug,
+    requestHeaders,
   })) as { product: Product };
 
   return product;

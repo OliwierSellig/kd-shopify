@@ -22,5 +22,5 @@ export default defineConfig({
   },
   redirects: redirects,
   output: isPreviewDeployment ? 'server' : 'hybrid',
-  adapter: vercel(),
+  adapter: vercel({}),
 });

@@ -6,6 +6,49 @@ import Head, { type Props as HeadProps } from './Head.astro';
 type Props = HeadProps
 
 const { ...props } = Astro.props
+
+async function sha256(plain: string): Promise<ArrayBuffer> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(plain);
+  return await crypto.subtle.digest('SHA-256', data);
+}
+
+function base64URLEncode(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  const base64 = btoa(String.fromCharCode(...bytes));
+  return base64
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+}
+
+async function generateCodeChallenge(verifier: string): Promise<string> {
+  const hashedVerifier = await sha256(verifier);
+  return base64URLEncode(hashedVerifier);
+}
+
+async function generateAuthUrl() {
+  const codeVerifier = "ThisIsATestVerifier123!@#";
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
+  
+  const scopes = 'openid email customer-account-api:full';
+
+  const params = new URLSearchParams({
+    client_id: import.meta.env.PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID,
+    response_type: 'code',
+    redirect_uri: 'https://bd9c-109-95-143-25.ngrok-free.app/konto',
+    state: crypto.randomUUID(),
+    code_challenge: codeChallenge,
+    code_challenge_method: 'S256',
+    scope: scopes
+  });
+
+  return `https://shopify.com/authentication/90610270557/oauth/authorize?${params.toString()}`;
+}
+
+const authUrl = await generateAuthUrl();
+
+
 ---
 
 <!doctype html>
@@ -14,20 +57,64 @@ const { ...props } = Astro.props
     <Head {...props} />
   </head>
   <body>
-      <Cart client:load />
-    <header class="header max-width"><a href="/">Strona główna</a></header>
+    <Cart client:load />
+    <header class="header max-width">
+      <a href="/">Strona główna</a>
+      <div class="header__right">
+        <a href={authUrl} class="auth-link" aria-label="Logowanie / Rejestracja">
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="24" 
+            height="24" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </a>
+      </div>
+    </header>
     <main id="main">
-        <slot />
-      </main> 
+      <slot />
+    </main> 
   </body>
 </html>
 
 <style lang="scss">
-  .header{
+  .header {
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: space-between;
     height: 100px;
+
+    &__right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
+
+  .auth-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
   }
 </style>

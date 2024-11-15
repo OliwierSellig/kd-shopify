@@ -1,9 +1,6 @@
-import {
-  ADD_TO_CART_MUTATION,
-  CREATE_CART_MUTATION,
-  GET_CART_QUERY,
-  UPDATE_CART_LINES_MUTATION,
-} from '../global/mutations';
+// @ts-nocheck
+
+import { ADD_TO_CART_MUTATION, CREATE_CART_MUTATION, GET_CART_QUERY, UPDATE_CART_LINES_MUTATION } from '../global/mutations';
 import type { Cart } from '../global/types';
 import { shopifyClient } from './shopify';
 

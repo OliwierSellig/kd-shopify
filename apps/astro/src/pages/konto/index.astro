@@ -1,0 +1,276 @@
+---
+
+import Layout from '../../layouts/Layout.astro'
+import metadataFetch from '@/utils/metadata.fetch'
+
+const metadata = await metadataFetch('Index_Page')
+
+const code = Astro.url.searchParams.get('code')
+const state = Astro.url.searchParams.get('state')
+
+// Store token in session/localStorage
+const storedToken = typeof window !== 'undefined' ? localStorage.getItem('shopify_token') : null
+
+const code_verifier = "ThisIsATestVerifier123!@#"
+
+async function getAccessToken(code: string, verifier: string) {
+  const tokenEndpoint = 'https://shopify.com/authentication/90610270557/oauth/token'
+  
+  const params = new URLSearchParams({
+    grant_type: 'authorization_code',
+    client_id: import.meta.env.PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID,
+    code: code,
+    redirect_uri: 'https://bd9c-109-95-143-25.ngrok-free.app/konto',
+    code_verifier: verifier,
+  })
+
+  try {
+    const response = await fetch(tokenEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+      },
+      body: params
+    })
+
+
+
+    const responseText = await response.text()
+    
+    
+    if (!response.ok) {
+      const errorData = JSON.parse(responseText)
+      throw new Error(`Token exchange failed: ${JSON.stringify(errorData)}`)
+    }
+
+    const tokenData = JSON.parse(responseText)
+
+
+
+    return tokenData
+  } catch (error) {
+    console.error('Token exchange error:', error)
+    throw error
+  }
+}
+
+const getUserEmail = async (token: string) => {
+
+
+    const response = await fetch(
+        'https://shopify.com/90610270557/account/customer/api/2024-10/graphql',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `shcat_${token.replace('shcat_', '')}`,
+            },
+            body: JSON.stringify({
+      operationName: 'SomeQuery',
+      query: 'query { customer { emailAddress { emailAddress }}}',
+      variables: {},
+    }),
+  },)
+
+  const responseData = await response.json()
+
+  return responseData?.data?.customer?.emailAddress?.emailAddress
+}
+
+
+
+
+let authStatus = {
+  isLoading: false,
+  error: null,
+  token: storedToken, // Initialize with stored token
+  id_token: null,
+  success: !!storedToken // Set success based on stored token
+}
+
+// Only attempt token exchange if we have a code and don't have a stored token
+if (code) {
+  authStatus.isLoading = true
+  try {
+    const tokenData = await getAccessToken(code, code_verifier)
+    authStatus.token = tokenData.access_token
+    authStatus.success = true
+    authStatus.id_token = tokenData.id_token
+    
+    // Remove code from URL without page refresh
+    if (typeof window !== 'undefined') {
+      const newUrl = new URL(window.location.href)
+      newUrl.searchParams.delete('code')
+      newUrl.searchParams.delete('state')
+      window.history.replaceState({}, '', newUrl)
+    }
+  } catch (error) {
+    authStatus.error = error.message
+  } finally {
+    authStatus.isLoading = false
+  }
+}
+let email
+console.log('authStatus', authStatus.id_token)
+if (authStatus.token) {
+  email = await getUserEmail(authStatus.token)
+}
+---
+
+<Layout {...metadata}>
+  <div class="account-page">
+    {authStatus.isLoading ? (
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Obtaining access token...</p>
+      </div>
+    ) : authStatus.error ? (
+      <div class="error">
+        <h2>Error</h2>
+        <p>{authStatus.error}</p>
+        <a href="/konto" class="try-again-button">Try Again</a>
+      </div>
+    ) : authStatus.success ? (
+      <div class="success">
+        <h2>Authentication Successful!</h2>
+        <div class="token-display">
+          <p>Access Token:</p>
+          <code>{authStatus.token}</code>
+        </div>
+        <button 
+          id="logoutButton" 
+        >
+          Logout
+        </button>
+        <p>{email}</p>
+      </div>
+    ) : (
+      <div class="welcome">
+        <h2>Welcome to Your Account</h2>
+        <p>Please log in to continue.</p>
+      </div>
+    )}
+  </div>
+</Layout>
+
+<script define:vars={{ token: authStatus.id_token }}>
+    console.log('token', token)
+    document.getElementById('logoutButton')?.addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/logout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ token })
+        });
+        const responseData = await response.json()
+        if (response.ok) {
+          window.location.href = '/';
+        } else {
+          const data = await response.json();
+          throw new Error(data.error || 'Logout failed');
+        }
+      } catch (error) {
+        console.error('Logout error:', error);
+        alert('Failed to logout. Please try again.');
+      }
+    });
+  </script>
+
+<style lang="scss">
+  .account-page {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loading {
+    text-align: center;
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #3498db;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  .error {
+    text-align: center;
+    padding: 2rem;
+    background: #fef2f2;
+    border-radius: 8px;
+    max-width: 400px;
+    
+    h2 {
+      color: #dc2626;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .success {
+    text-align: center;
+    padding: 2rem;
+    background: #f0fdf4;
+    border-radius: 8px;
+    max-width: 600px;
+
+    h2 {
+      color: #166534;
+      margin-bottom: 1.5rem;
+    }
+
+    .token-display {
+      text-align: left;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-top: 1rem;
+
+      p {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      code {
+        display: block;
+        word-break: break-all;
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-family: monospace;
+      }
+    }
+  }
+
+  .try-again-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    margin-top: 1rem;
+    
+    &:hover {
+      background: #b91c1c;
+    }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>

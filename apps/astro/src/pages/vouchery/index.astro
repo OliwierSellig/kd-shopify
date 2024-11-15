@@ -1,0 +1,17 @@
+---
+import List from '@/src/components/global/List.astro'
+import Layout from '@/src/layouts/Layout.astro'
+import { getProductsByType } from '@/src/utils/get-type'
+import metadataFetch from '@/utils/metadata.fetch'
+const metadata = await metadataFetch('Index_Page')
+
+const vouchers = await getProductsByType('voucher')
+
+const vouchersList = vouchers.edges.map((edge) => edge.node);
+
+---
+
+<Layout {...metadata}>
+    <section><List href="/vouchery" items={vouchersList} /></section>
+</Layout>
+
