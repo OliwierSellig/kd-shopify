@@ -4,7 +4,7 @@ export async function POST(request: Request) {
   console.log('Attempting logout with token:', token);
 
   try {
-    const redirectUri = 'https://bd9c-109-95-143-25.ngrok-free.app/';
+    const redirectUri = 'https://kd-shopify-astro.vercel.app/';
     const logoutUrl = `https://shopify.com/authentication/90610270557/logout?id_token_hint=${token}&post_logout_redirect_uri=${encodeURIComponent(redirectUri)}`;
 
     const response = await fetch(logoutUrl, {

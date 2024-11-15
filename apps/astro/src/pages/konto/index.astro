@@ -20,7 +20,7 @@ async function getAccessToken(code: string, verifier: string) {
     grant_type: 'authorization_code',
     client_id: import.meta.env.PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID,
     code: code,
-    redirect_uri: 'https://bd9c-109-95-143-25.ngrok-free.app/konto',
+    redirect_uri: 'https://kd-shopify-astro.vercel.app/konto',
     code_verifier: verifier,
   })
 
